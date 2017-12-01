@@ -7,7 +7,7 @@
 /* This must be set to one to enable any of
  * the below prints 
  */
-#define DEBUG_ENABLE 0
+#define DEBUG_ENABLE 1
 
 /* 
  * each of these enables debugging prints 

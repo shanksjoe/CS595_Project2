@@ -246,7 +246,50 @@ hb_get_method_idx (const char * name, java_class_t * cls)
 java_class_t * 
 hb_resolve_class (u2 const_idx, java_class_t * src_cls)
 {
-	HB_ERR("%s UNIMPLEMENTED\n", __func__);
+	if(const_idx == 0) {
+		HB_ERR("%s UNIMPLEMENTED AT INDEX 0\n", __func__);
+	}
+	else {
+
+		HB_DEBUG("Resolve class index: %d\n", const_idx);
+	
+		if(const_idx > src_cls->const_pool_count) {
+			return NULL;
+		}
+
+		if(IS_RESOLVED(src_cls->const_pool[const_idx])) {
+			return (java_class_t *)MASK_RESOLVED_BIT(src_cls->const_pool[const_idx]);
+		}
+
+		CONSTANT_Class_info_t *c = (CONSTANT_Class_info_t*)src_cls->const_pool[const_idx];
+		
+		const char* class_nm = hb_get_const_str (c->name_idx, src_cls);
+		HB_DEBUG("class name %s \n", class_nm);
+
+		java_class_t * cls = hb_get_class(class_nm);
+
+		if(cls) {
+			HB_DEBUG("Found class %s in class map\n", class_nm);
+			src_cls->const_pool[const_idx] = (const_pool_info_t*)MARK_RESOLVED(cls);
+			return cls;
+		}
+		else {
+
+			cls = hb_load_class(class_nm);
+			if(!cls) {
+				HB_ERR("Couldn't load class\n");
+				return NULL;
+			}
+			
+			hb_add_class(class_nm, cls);
+			hb_prep_class(cls);
+			hb_init_class(cls);
+			
+			src_cls->const_pool[const_idx] = (const_pool_info_t*)MARK_RESOLVED(cls);
+			return cls;	
+		}
+	}
+
 	return NULL;
 }
 
@@ -344,8 +387,51 @@ hb_resolve_method (u2 const_idx,
 		   java_class_t * target_cls)
 		       
 {
-	HB_ERR("%s UNIMPLEMENTED\n", __func__);
-	return NULL;
+	CONSTANT_Methodref_info_t *methodref;
+	CONSTANT_NameAndType_info_t *methodnt = NULL;
+	method_info_t *method = NULL;
+	int i;
+	
+	methodref = (CONSTANT_Methodref_info_t*)src_cls->const_pool[const_idx];
+
+	if(methodref->tag != CONSTANT_Methodref) {
+		HB_ERR("%s attempt to use non-methodref constant\n", __func__);
+	}
+
+	if(!target_cls) {
+		target_cls = hb_resolve_class(methodref->class_idx, src_cls);
+	}
+
+	if(!target_cls) {
+		HB_ERR("Could not resolve class ref in %s\n", __func__);
+	}
+
+	methodnt = (CONSTANT_NameAndType_info_t*)src_cls->const_pool[methodref->name_and_type_idx];
+
+	const char* method_nm = hb_get_const_str(methodnt->name_idx, src_cls);
+	const char* method_desc = hb_get_const_str(methodnt->desc_idx, src_cls);
+	
+	for(i = 0; i < target_cls->methods_count; i++) {
+		u2 nidx = target_cls->methods[i].name_idx;
+		u2 didx = target_cls->methods[i].desc_idx;
+		const char* tnm = hb_get_const_str(nidx, target_cls);
+		const char* tds = hb_get_const_str(didx, target_cls);
+
+		if(strcmp(tnm, method_nm) == 0 && strcmp(tds, method_desc) == 0) {
+			method = &target_cls->methods[i];
+			break;
+		}
+ 	}
+
+	//No method found
+	if(!method) {
+		java_class_t * super = hb_get_super_class(target_cls);
+		if(super) {
+			method = hb_resolve_method(const_idx, src_cls, super);
+		}
+	}
+		
+	return method;
 }
 		       
 
