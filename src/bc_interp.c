@@ -1870,7 +1870,7 @@ static int
 handle_newarray (u1 * bc, java_class_t * cls) {
 	//HB_ERR("%s NOT IMPLEMENTED\n", __func__);
 	//return -1;
-	java_class_t * target_cls = NULL;
+	//java_class_t * target_cls = NULL;
 	obj_ref_t * oa = NULL;
 	var_t len = pop_val();
 	var_t ret;
@@ -1879,12 +1879,12 @@ handle_newarray (u1 * bc, java_class_t * cls) {
 	idx = GET_2B_IDX(bc);
 
 	/* load and initialize the class (if not already) */
-
+/*target_cls = hb_resolve_class(idx, cls);
 	if (!target_cls) {
 		HB_ERR("Could not resolve class ref in %s\n", __func__);
 		return -1;
 	}
-
+*/
 	if (len.int_val < 0) {
 		hb_throw_and_create_excp(EXCP_NEG_ARR_SIZE);
 		return -ESHOULD_BRANCH;
