@@ -254,6 +254,7 @@ hb_resolve_class (u2 const_idx, java_class_t * src_cls)
 		HB_DEBUG("Resolve class index: %d\n", const_idx);
 	
 		if(const_idx > src_cls->const_pool_count) {
+			HB_DEBUG("Inde out of bound: %d\n", const_idx);
 			return NULL;
 		}
 
