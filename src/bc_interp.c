@@ -1853,9 +1853,13 @@ static int
 handle_new (u1 * bc, java_class_t * cls) {
 	java_class_t * target_cls =NULL;
 	u2 idx;
+	obj_ref_t * oref = NULL;
+	var_t ret;
 	idx=GET_2B_IDX(bc);
 	target_cls = hb_resolve_class(idx, cls);
-	gc_obj_alloc(target_cls);
+	oref=gc_obj_alloc(target_cls);
+	ret.obj=oref;
+	push_val(ret);
 	//HB_ERR("%s NOT IMPLEMENTED\n", __func__);
 	return 3;
 	//return -1;
