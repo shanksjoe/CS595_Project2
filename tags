@@ -3,7 +3,7 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 ACC_ABSTRACT	include/class.h	38;"	d
 ACC_ABSTRACT	include/methods.h	27;"	d
 ACC_ANNOTATION	include/class.h	40;"	d
@@ -234,20 +234,22 @@ DEFINE_HASHTABLE_SEARCH	include/hashtable.h	103;"	d
 DEG_TO_RAD	javasrc/java/lang/Math.java	/^	private static final double DEG_TO_RAD = 0.0174532925199432957692369076849;$/;"	f	class:Math	file:
 DEPENDS	Makefile	/^DEPENDS := $(OBJ:.o=.d)$/;"	m
 DIV_ROUND_UP	include/hb_util.h	211;"	d
-DO_ACMP	src/bc_interp.c	1409;"	d	file:
-DO_ALOADN	src/bc_interp.c	440;"	d	file:
-DO_ASTOREN	src/bc_interp.c	728;"	d	file:
-DO_DSTOREN	src/bc_interp.c	701;"	d	file:
+DO_ACMP	src/bc_interp.c	1506;"	d	file:
+DO_ALOADN	src/bc_interp.c	453;"	d	file:
+DO_ASTOREN	src/bc_interp.c	754;"	d	file:
+DO_DSTOREN	src/bc_interp.c	727;"	d	file:
 DO_FCONSTN	src/bc_interp.c	197;"	d	file:
-DO_FLOADN	src/bc_interp.c	391;"	d	file:
-DO_FSTOREN	src/bc_interp.c	675;"	d	file:
-DO_ICMP	src/bc_interp.c	1367;"	d	file:
+DO_FLOADN	src/bc_interp.c	404;"	d	file:
+DO_FSTOREN	src/bc_interp.c	701;"	d	file:
+DO_ICMP	src/bc_interp.c	1464;"	d	file:
 DO_ICONSTN	src/bc_interp.c	140;"	d	file:
-DO_IF0	src/bc_interp.c	1328;"	d	file:
-DO_LLOADN	src/bc_interp.c	361;"	d	file:
-DO_LOGOP	src/bc_interp.c	1149;"	d	file:
-DO_LSTOREN	src/bc_interp.c	648;"	d	file:
-DO_VAL_RETURN	src/bc_interp.c	1460;"	d	file:
+DO_IF0	src/bc_interp.c	1425;"	d	file:
+DO_ILOADN	src/bc_interp.c	338;"	d	file:
+DO_ISTOREN	src/bc_interp.c	639;"	d	file:
+DO_LLOADN	src/bc_interp.c	374;"	d	file:
+DO_LOGOP	src/bc_interp.c	1246;"	d	file:
+DO_LSTOREN	src/bc_interp.c	674;"	d	file:
+DO_VAL_RETURN	src/bc_interp.c	1557;"	d	file:
 DataInput	javasrc/java/io/DataInput.java	/^public interface DataInput$/;"	i
 DataInputStream	javasrc/java/io/DataInputStream.java	/^	public DataInputStream(InputStream in) {$/;"	m	class:DataInputStream
 DataInputStream	javasrc/java/io/DataInputStream.java	/^public class DataInputStream extends FilterInputStream implements DataInput {$/;"	c
@@ -1537,6 +1539,7 @@ heap_init	src/mm.c	/^heap_init (int heap_size_megs)$/;"	f
 heap_ptr	include/class.h	/^	u8 heap_ptr;$/;"	m	struct:obj_ref
 heap_region	include/mm.h	/^	void * heap_region;$/;"	m	struct:heap_info
 heap_size_megs	src/arch/x64-linux/hawkbeans.c	/^	int heap_size_megs;$/;"	m	struct:gopts	file:
+hello	testcode/hello.java	/^class hello{$/;"	c
 hexDigit	javasrc/java/util/Properties.java	/^	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',$/;"	f	class:Properties	file:
 hi_bytes	include/constants.h	/^	u4 hi_bytes;$/;"	m	struct:CONSTANT_Double_info
 hi_bytes	include/constants.h	/^	u4 hi_bytes;$/;"	m	struct:CONSTANT_Long_info
@@ -1893,6 +1896,7 @@ main	testcode/TestNullPointerThrowNoCatch.java	/^	public static void main (Strin
 main	testcode/TestPrimitiveParams.java	/^	public static void main(String[] args)$/;"	m	class:TestPrimitiveParams
 main	testcode/TestStaticMethods.java	/^	public static void main(String[] args) {$/;"	m	class:TestStaticMethods
 main	testcode/TestString1.java	/^{	public static void main(String[] args)$/;"	m	class:TestString1
+main	testcode/hello.java	/^public static void main(String[] args){$/;"	m	class:hello
 major_version	include/class.h	/^	u2 major_version;$/;"	m	struct:java_class
 makeCopy	testcode/EightQueens.java	/^	public static char[][] makeCopy(char[][] mat){$/;"	m	class:EightQueens
 map	javasrc/java/util/HashSet.java	/^	private Map<Integer, LinkedList<E>> map = new HashMap<Integer, LinkedList<E>>();$/;"	f	class:HashSet	file:

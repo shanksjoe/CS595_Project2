@@ -591,7 +591,7 @@ handle_istore (u1 * bc, java_class_t * cls) {
 	stack_frame_t * frame = cur_thread->cur_frame;
 	var_t v = pop_val();
 	u1 idx = bc[1];
-	frame->locals[idx].float_val = v.int_val;
+	frame->locals[idx].int_val = v.int_val;
 	return 2;
 	//return -1;
 }
@@ -1877,7 +1877,7 @@ handle_newarray (u1 * bc, java_class_t * cls) {
 	u2 idx;
 		
 	idx = GET_2B_IDX(bc);
-
+	//HB_ERR("%d is the value for BC %d\n",bc[1],idx);
 	/* load and initialize the class (if not already) */
 /*target_cls = hb_resolve_class(idx, cls);
 	if (!target_cls) {
@@ -1901,7 +1901,8 @@ T_LONG 	11 0
 SEtting default value ispending
 */
 
-	oa = gc_array_alloc(idx, len.int_val);
+	//oa = gc_array_alloc(idx, len.int_val);
+	oa = gc_array_alloc(bc[1], len.int_val);
 
 	if (!oa) {
 		hb_throw_and_create_excp(EXCP_OOM);
