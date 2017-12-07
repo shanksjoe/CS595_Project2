@@ -287,8 +287,6 @@ handle_ldc2_w (u1 * bc, java_class_t * cls) {
 // WRITE ME
 static int
 handle_iload (u1 * bc, java_class_t * cls) {
-	//HB_ERR("%s NOT IMPLEMENTED\n", __func__);
-	//return -1;
 	u1 idx = bc[1];
 	stack_frame_t * frame = cur_thread->cur_frame; 
 	push_val(frame->locals[idx]);
@@ -337,7 +335,9 @@ handle_aload (u1 * bc, java_class_t * cls) {
 // WRITE ME
 #define DO_ILOADN(n) \
 	stack_frame_t * frame = cur_thread->cur_frame; \
-	push_val(frame->locals[n]); \
+	var_t res; \
+	res.int_val = frame->locals[n].int_val; \
+	push_val(res); \
 	return 1;
 
 static int
@@ -639,13 +639,12 @@ handle_astore (u1 * bc, java_class_t * cls) {
 #define DO_ISTOREN(n) \
 	stack_frame_t * frame = cur_thread->cur_frame; \
 	var_t v = pop_val(); \
-	frame->locals[n].float_val = v.int_val; \
+	frame->locals[n].int_val = v.int_val; \
 	return 1;
 static int
 handle_istore_0 (u1 * bc, java_class_t * cls) {
 	//HB_ERR("%s NOT IMPLEMENTED\n", __func__);
 	DO_ISTOREN(0);
-	return -1;
 }
 
 // WRITE ME
@@ -1868,42 +1867,15 @@ handle_new (u1 * bc, java_class_t * cls) {
 // WRITE ME
 static int
 handle_newarray (u1 * bc, java_class_t * cls) {
-	//HB_ERR("%s NOT IMPLEMENTED\n", __func__);
-	//return -1;
-	//java_class_t * target_cls = NULL;
 	obj_ref_t * oa = NULL;
 	var_t len = pop_val();
 	var_t ret;
-	u2 idx;
-		
-	idx = GET_2B_IDX(bc);
-	//HB_ERR("%d is the value for BC %d\n",bc[1],idx);
-	/* load and initialize the class (if not already) */
-/*target_cls = hb_resolve_class(idx, cls);
-	if (!target_cls) {
-		HB_ERR("Could not resolve class ref in %s\n", __func__);
-		return -1;
-	}
-*/
 	if (len.int_val < 0) {
 		hb_throw_and_create_excp(EXCP_NEG_ARR_SIZE);
 		return -ESHOULD_BRANCH;
 	}
-	/*CASE :
-	T_BOOLEAN 	4 Def 0
-T_CHAR 	5  '\u0000'
-T_FLOAT 	6 0
-T_DOUBLE 	7 0
-T_BYTE 	8 0 
-T_SHORT 	9 0
-T_INT 	10 0
-T_LONG 	11 0
-SEtting default value ispending
-*/
-
-	//oa = gc_array_alloc(idx, len.int_val);
 	oa = gc_array_alloc(bc[1], len.int_val);
-
+	//HB_ERR("VAlue of bc is %d n len is %d \n",bc[1], len.int_val);
 	if (!oa) {
 		hb_throw_and_create_excp(EXCP_OOM);
 		return -ESHOULD_BRANCH;
