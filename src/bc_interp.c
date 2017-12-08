@@ -1950,11 +1950,17 @@ handle_arraylength (u1 * bc, java_class_t * cls) {
 	return 1;
 }
 
-// WRITE ME
+// POORNIMA
 static int
 handle_athrow (u1 * bc, java_class_t * cls) {
-	HB_ERR("%s NOT IMPLEMENTED\n", __func__);
-	return -1;
+	
+	u2 idx = GET_2B_IDX(bc);
+	HB_DEBUG("idx %d\n", idx);
+	var_t objectref = pop_val();
+
+	obj_ref_t* eref = objectref.obj;
+	hb_throw_exception(eref);
+	return 0;
 }
 
 static int

@@ -1,7 +1,7 @@
 /* 
  * This file is part of the Hawkbeans JVM developed by
  * the HExSA Lab at Illinois Institute of Technology.
- *
+ *r
  * Copyright (c) 2017, Kyle C. Hale <khale@cs.iit.edu>
  *
  * All rights reserved.
@@ -67,12 +67,19 @@ static const char * excp_strs[16] __attribute__((used)) =
  * @return: none. exits on failure.
  *
  */
-// WRITE ME
+// POORNIMA
 void
 hb_throw_and_create_excp (u1 type)
 {
-	HB_ERR("%s UNIMPLEMENTED\n", __func__);
-	exit(EXIT_FAILURE);
+	java_class_t* cls = hb_get_or_load_class(excp_strs[type]);
+	obj_ref_t* oref = gc_obj_alloc(cls);
+	
+	if(oref == NULL) {
+		exit(EXIT_FAILURE);
+	}
+
+	hb_invoke_ctor(oref);	
+	hb_throw_exception(oref);
 }
 
 
@@ -133,10 +140,51 @@ get_excp_str (obj_ref_t * eref)
  *
  */
 
-// WRITE ME
+// POORNIMA
 void
 hb_throw_exception (obj_ref_t * eref)
 {
-	HB_ERR("%s UNIMPLEMENTED\n", __func__);
+	//HB_DEBUG("Heap ptr : %d, type: %d\n", eref->heap_ptr, eref->type);
+	
+	if(eref == NULL) {
+		hb_throw_and_create_excp(EXCP_NULL_PTR);
+	}
+	else {
+		native_obj_t * obj = (native_obj_t*)eref->heap_ptr;
+        	java_class_t * objcls = obj->class;
+		if(objcls == NULL)
+			exit(EXIT_FAILURE);
+
+			char * class_nm = hb_get_class_name(objcls);
+			
+			method_info_t* m = cur_thread->cur_frame->minfo;
+			if(m != NULL) {
+				for(int i=0; i< m->code_attr->excp_table_len; i++) 
+				{
+					CONSTANT_Class_info_t *c = (CONSTANT_Class_info_t*)objcls->const_pool[m->code_attr->excp_table[i].catch_type];
+
+			                const char* exc_class_nm = hb_get_const_str (c->name_idx, objcls);
+					if((m->code_attr->excp_table[i].start_pc <= cur_thread->cur_frame->pc) && (m->code_attr->excp_table[i].end_pc >= cur_thread->cur_frame->pc) && (*exc_class_nm  == *class_nm)) 
+					{
+						hb_dump_op_stack();
+						var_t objectref;
+						objectref.obj = eref;
+						op_stack_t * stack = cur_thread->cur_frame->op_stack;
+        					stack->oprs[++(stack->sp)] = objectref;
+						cur_thread->cur_frame->pc = m->code_attr->excp_table[i].handler_pc;
+						hb_exec(cur_thread);
+						return;			
+					} 
+				}
+			}
+			
+			hb_pop_frame(cur_thread);
+			if(!cur_thread->cur_frame) {
+				HB_DEBUG("Uncaught Runtime Exception\n");
+				exit(EXIT_FAILURE);
+			}
+			hb_throw_exception(eref);
+	} 
+
 	exit(EXIT_FAILURE);
 }
