@@ -157,8 +157,14 @@ hb_throw_exception (obj_ref_t * eref)
 
 			char * class_nm = hb_get_class_name(objcls);
 			
+			if(!cur_thread->cur_frame) {
+				HB_DEBUG("NULL POINTER EXCEPTION\n");
+				exit(EXIT_FAILURE);
+			}
+
 			method_info_t* m = cur_thread->cur_frame->minfo;
 			if(m != NULL) {
+				HB_DEBUG("do we get here?");
 				for(int i=0; i< m->code_attr->excp_table_len; i++) 
 				{
 					CONSTANT_Class_info_t *c = (CONSTANT_Class_info_t*)objcls->const_pool[m->code_attr->excp_table[i].catch_type];
@@ -177,10 +183,10 @@ hb_throw_exception (obj_ref_t * eref)
 					} 
 				}
 			}
-			
 			hb_pop_frame(cur_thread);
 			if(!cur_thread->cur_frame) {
-				HB_DEBUG("Uncaught Runtime Exception\n");
+				hb_throw_and_create_excp(EXCP_NULL_PTR);
+				//HB_DEBUG("Uncaught Runtime Exception\n");
 				exit(EXIT_FAILURE);
 			}
 			hb_throw_exception(eref);
